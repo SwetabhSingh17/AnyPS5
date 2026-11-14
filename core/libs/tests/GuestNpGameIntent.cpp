@@ -103,8 +103,16 @@ int main() {
             "null key did not fail");
     Require(sceNpGameIntentGetPropertyValueString(&info.intent_data, "", buf, sizeof(buf)) == kInvalidArgument,
             "empty key did not fail");
+    errno = 71;
+    Require(sceNpGameIntentGetPropertyValueString(&info.intent_data, reinterpret_cast<const char*>(0x10), buf, sizeof(buf)) == kInvalidArgument,
+            "unmapped key did not fail");
+    Require(errno == 71, "errno preserved on unmapped key");
     Require(sceNpGameIntentGetPropertyValueString(&info.intent_data, "key", nullptr, sizeof(buf)) == kInvalidArgument,
             "null value buf did not fail");
+    errno = 71;
+    Require(sceNpGameIntentGetPropertyValueString(&info.intent_data, "key", reinterpret_cast<char*>(0x10), sizeof(buf)) == kInvalidArgument,
+            "unmapped value buf did not fail");
+    Require(errno == 71, "errno preserved on unmapped value buf");
     Require(sceNpGameIntentGetPropertyValueString(&info.intent_data, "key", buf, 0) == kInvalidArgument,
             "zero buf size did not fail");
 
@@ -122,6 +130,11 @@ int main() {
     Require(sceNpGameIntentGetPropertyValueString(&info.intent_data, "", canaryBuf, sizeof(canaryBuf)) == kInvalidArgument,
             "empty key canary call did not fail");
     Require(canaryBuf[0] == 'X', "buffer was modified on empty key error");
+    errno = 71;
+    Require(sceNpGameIntentGetPropertyValueString(&info.intent_data, reinterpret_cast<const char*>(0x10), canaryBuf, sizeof(canaryBuf)) == kInvalidArgument,
+            "unmapped key canary call did not fail");
+    Require(canaryBuf[0] == 'X', "buffer was modified on unmapped key error");
+    Require(errno == 71, "errno preserved on unmapped key canary call");
 
     Require(sceNpGameIntentGetPropertyValueString(&info.intent_data, "key", canaryBuf, sizeof(canaryBuf)) == kValueNotFound,
             "get property value mismatch");

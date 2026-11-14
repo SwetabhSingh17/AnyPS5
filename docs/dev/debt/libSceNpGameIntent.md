@@ -2,7 +2,7 @@
 
 ### Functional
 
-- [sceNpGameIntentInitParamInit, sceNpGameIntentInfoInit, sceNpGameIntentReceiveIntent](../../../core/libs/prx/libSceNpGameIntent/Export.cpp) - safely copying guest memory and refusing unmapped or unreadable pointers is a host-safety fallback; whether console hardware faults or returns an argument error on unmapped memory is unmeasured.
+- [sceNpGameIntentInitParamInit, sceNpGameIntentInfoInit, sceNpGameIntentReceiveIntent, sceNpGameIntentGetPropertyValueString](../../../core/libs/prx/libSceNpGameIntent/Export.cpp) - safely copying guest memory and refusing unmapped or unreadable pointers is a host-safety fallback; whether console hardware faults or returns an argument error on unmapped memory is unmeasured.
 
 ### Silent stubs
 
