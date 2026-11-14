@@ -104,11 +104,17 @@ int APS5_VABI sceGameUpdateCheck(int requestId, const GameUpdateCheckParam* para
         errno = savedErrno;
         return SCE_GAME_UPDATE_ERROR_INVALID_ARGUMENT;
     }
-    if (param->size != sizeof(GameUpdateCheckParam) || localResult.size != sizeof(GameUpdateCheckResult)) {
+    GameUpdateCheckParam localParam{};
+    const bool copiedParamIn = GuestCopyIn_nid_no_patch(&localParam, param, sizeof(localParam));
+    if (!copiedParamIn) {
+        errno = savedErrno;
+        return SCE_GAME_UPDATE_ERROR_INVALID_ARGUMENT;
+    }
+    if (localParam.size != sizeof(GameUpdateCheckParam) || localResult.size != sizeof(GameUpdateCheckResult)) {
         errno = savedErrno;
         return SCE_GAME_UPDATE_ERROR_INVALID_SIZE;
     }
-    if (param->option != 0 || hasNonZeroReserved(param)) {
+    if (localParam.option != 0 || hasNonZeroReserved(&localParam)) {
         errno = savedErrno;
         return SCE_GAME_UPDATE_ERROR_INVALID_ARGUMENT;
     }
